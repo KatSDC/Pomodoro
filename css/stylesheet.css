@@ -1,0 +1,83 @@
+body {
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 5.5em;
+  font-weight: 900;
+}
+
+h3 {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+form {
+    margin: 0 auto;
+    width: 600px;
+    padding: 1em;
+}
+
+form div + div {
+    margin-top: 10px;
+}
+
+input, textarea {
+  font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+    color: #9e9d9c;
+    width: 500px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+textarea {
+    vertical-align: top;
+    height: 5em;
+    resize: vertical;
+}
+
+.clock {
+  display: inline-block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 3.5em;
+}
+
+.timer-btn {
+  background-color: #ccc;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.5em;
+  text-decoration: none;
+  padding: 0 10px;
+  margin: 0 10px;
+}
+
+#jira {
+  visibility: hidden;
+  height: 0;
+}
+
+#submit_work {
+  background-color: #ccc;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1em;
+  text-decoration: none;
+  padding: 0 10px;
+  margin: 0 10px;
+}
+
+#reddit {
+  visibility: hidden;
+  text-align: left;
+}

@@ -1,0 +1,52 @@
+<html>
+<head>
+	<title>Pomodo.ro</title>
+	<link href='https://fonts.googleapis.com/css?family=Quicksand:700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='css/stylesheet.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<h1>Pomodo.ro</h1>
+
+	<button class="timer-btn" id="start">Start</button>
+	<div class="clock" id="timer"></div>
+	<button class="timer-btn" id="pause">Pause</button>
+
+	<div>
+		<h3 id="status"></h3>
+	</div>
+
+	<div id="jira">
+		<h3>JIRA Work Log</h3>
+		<form action="">
+            <div>
+                <input type="text" id="ticket" name="ticket" placeholder="JIRA ticket number"/>
+            </div>
+            <div>
+                <input type="text" id="time" name="time" placeholder="Time Spent (e.g. 3d 2h 1m)" />
+            </div>
+            <div>
+                <textarea id="comment" name="work_log" placeholder="Comments"></textarea>
+            </div>
+            <div>
+                <button id="submit_work" type="submit">Log Work</button>
+            </div>
+        </form>
+	</div>
+
+	<div id="reddit">
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+
+    <script id="reddit-template" type="text/x-handlebars-template">
+      	{{#each reddit}}  
+      	  <div id="title"><a href="{{url}}">{{title}}</a></div>
+          <div id="info"><span id="subreddit">{{subreddit}}</span><span id="author">{{author}}</span><span id="score">{{score}}</span></div>
+        {{/each}}
+      </script>
+
+</body>
+</html>
