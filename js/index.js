@@ -149,3 +149,37 @@ function loadFeed() {
 
 $(document).ready(displayWorkTimer);
 
+
+// Working API GET Request!:
+// curl -v -u 8e3667b730cde20d46dc7effcede90e5:api_token \
+//    -H "Content-Type: application/json" \
+//    -H "Origin: localhost" \
+//     -X GET https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/projects/21218612
+
+// AJAX Requestion based on following curl request:
+//curl -v -u 1971800d4d82861d8f2c1651fea4d212:api_token \
+//    -H "Content-Type: application/json" \
+//    -d '{"time_entry":{"description":"Meeting with possible clients","tags":["billed"],"duration":1200,"start":"2013-03-05T07:58:58.000Z","pid":123,"created_with":"curl"}}' \
+//    -X POST https://www.toggl.com/api/v8/time_entries
+
+
+//This request is returning a 403 error in the console.
+//$.ajax({
+//  type: "POST",
+//  dataType: "json",
+//  url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries",
+//  contentType: "application/json",
+//  username: "8e3667b730cde20d46dc7effcede90e5",
+//  password: "api_token",
+//  data: {"time_entry":{"description":"Logging time to ticket","duration":1500,"start":"2016-08-15T20:24:55+00:00","pid":21218612,"created_with":"pomodoro"}},
+//  success: function(response){console.log(response)},
+//});
+
+// This POST request works in curl
+//curl -v -u 8e3667b730cde20d46dc7effcede90e5:api_token \
+//    -H "Content-Type: application/json" \
+//    -H "Origin: localhost" \
+//    -d '{"time_entry":{"description":"Logging time to ticket","duration":1500,"start":"2016-08-15T20:24:55+00:00","pid":21218612,"created_with":"pomodoro"}}' \
+//    -X POST https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries
+
+
