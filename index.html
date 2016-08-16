@@ -17,16 +17,16 @@
 	</div>
 
 	<div id="jira">
-		<h3>JIRA Work Log</h3>
+		<h3>Toggl Work Log</h3>
 		<form action="">
             <div>
-                <input type="text" id="ticket" name="ticket" placeholder="JIRA ticket number"/>
+                <input type="text" id="pid" name="pid" placeholder="Toggl Project ID"/>
             </div>
             <div>
-                <input type="text" id="time" name="time" placeholder="Time Spent (e.g. 3d 2h 1m)" />
+                <input type="text" id="duration" name="duration" value="25"/>
             </div>
             <div>
-                <textarea id="comment" name="work_log" placeholder="Comments"></textarea>
+                <textarea id="description" name="description" placeholder="Comments"></textarea>
             </div>
             <div>
                 <button id="submit_work" type="submit">Log Work</button>

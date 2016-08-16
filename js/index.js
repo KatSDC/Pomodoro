@@ -30,15 +30,15 @@ function displayWorkTimer() {
 	minutes = Math.floor(workTime / 60);
 	seconds = workTime % 60;
 	document.getElementById('timer').innerHTML = pad(minutes) + ":" + pad(seconds);
+	loadFeed();
 
 	$('#start').on('click', start);
 	$('#pause').on('click', pause);
-	$('#jira').on('submit', displayBreak);
+	$('#jira').on('submit', submitWork);
 }
 
 //This function displays the break timer no the page and sets up event listeners. It also hides the JIRA form.
-function displayBreak(event) {
-	event.preventDefault();
+function displayBreak() {
 	breakTime = 300;
 	minutes = Math.floor(breakTime / 60);
 	seconds = breakTime % 60;
@@ -90,6 +90,29 @@ function pause() {
 	document.getElementById('start').disabled = false;
 }
 
+//This function will submit the work log to Toggl
+function submitWork() {
+	event.preventDefault();
+	date = new Date;
+	isoDate = date.toISOString();
+	description = $('#description').val();
+	pid = $('#pid').val();
+	$.ajax({
+  		type: "POST",
+  		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries",
+  		beforeSend: function(xhr) {
+  			xhr.setRequestHeader("Authorization", "Basic " + btoa("8e3667b730cde20d46dc7effcede90e5:api_token"))
+  		},
+  		dataType: "json",
+  		contentType: "application/json",
+ 		processData: false,
+ 		data: '{"time_entry":{"description":"' + description + '","duration":1500,"start":"' + isoDate + '","pid":' + pid + ',"created_with":"pomodoro"}}',
+  		success: function() {
+  			displayBreak();
+  		},
+	});
+}
+
 //Sets up the interval and starts the break timer
 function startBreak() {
 	countdownId = setInterval("countdownBreak()", 1000);
@@ -99,7 +122,6 @@ function startBreak() {
 function countdownBreak() {
 	minutes = Math.floor(breakTime / 60);
 	seconds = breakTime % 60;
-	loadFeed();
 	$('#reddit').css('visibility', 'visible');
 	if (breakTime > 0) {
 		breakTime = breakTime - 1;
@@ -126,4 +148,3 @@ function loadFeed() {
 }
 
 $(document).ready(displayWorkTimer);
-

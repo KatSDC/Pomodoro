@@ -80,4 +80,22 @@ textarea {
 #reddit {
   visibility: hidden;
   text-align: left;
+  margin: 0 auto;
+  padding: 40px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1em;
+}
+
+span {
+  margin-right: 10px;
+  padding: 0 10px;
+}
+
+a {
+  text-decoration: none;
+}
+
+#title {
+  margin: 20px 0 10px 0;
+  font-size: 1.5em;
 }
