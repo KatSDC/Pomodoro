@@ -148,3 +148,4 @@ function loadFeed() {
 }
 
 $(document).ready(displayWorkTimer);
+

@@ -89,6 +89,7 @@ textarea {
 span {
   margin-right: 10px;
   padding: 0 10px;
+<<<<<<< 56b035ad62db647a80c34c8b457dea89f646ba79
 }
 
 a {
@@ -98,6 +99,8 @@ a {
 #title {
   margin: 20px 0 10px 0;
   font-size: 1.5em;
+=======
+>>>>>>> Adding styling and second integration with Toggl
 }
 
 a {
