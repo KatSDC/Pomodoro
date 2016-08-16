@@ -43,8 +43,8 @@
 
     <script id="reddit-template" type="text/x-handlebars-template">
       	{{#each reddit}}  
-      	  <div id="title"><a href="{{url}}">{{title}}</a></div>
-          <div id="info"><span id="subreddit">{{subreddit}}</span><span id="author">{{author}}</span><span id="score">{{score}}</span></div>
+      	  <div id="title"><a href="{{url}}" target="_blank">{{title}}</a></div>
+          <div id="info"><span id="subreddit"><b>Subreddit:</b> {{subreddit}}</span><span id="author"><b>Author:</b> {{author}}</span><span id="score"><b>Score:</b> {{score}}</span></div>
         {{/each}}
       </script>
 
