@@ -4,6 +4,7 @@ var model = {
 	jira_time: undefined,
 	jira_comment: undefined,
 	reddit: [],
+	projects: [],
 }
 
 //Global Variables
@@ -12,6 +13,8 @@ var breakTime;
 var countdownId = 0;
 var minutes;
 var seconds;
+var wid;
+var apiKey;
 
 //View
 
@@ -26,11 +29,16 @@ function renderReddit() {
 
 //This function displays the work timer on the page and sets up the event listeners
 function displayWorkTimer() {
+	apiKey = window.prompt("Please enter your Toggl API Key");
+	wid = window.prompt("Please enter your Toggle Workspace ID");
 	workTime = 10;
 	minutes = Math.floor(workTime / 60);
 	seconds = workTime % 60;
+	getProjects();
 	document.getElementById('timer').innerHTML = pad(minutes) + ":" + pad(seconds);
-	loadFeed();
+	$('#start').off();
+	$('#pause').off();
+	$('#jira').off();
 
 	$('#start').on('click', start);
 	$('#pause').on('click', pause);
@@ -42,6 +50,7 @@ function displayBreak() {
 	breakTime = 300;
 	minutes = Math.floor(breakTime / 60);
 	seconds = breakTime % 60;
+	loadFeed();
 	document.getElementById('timer').innerHTML = pad(minutes) + ":" + pad(seconds);
 	document.getElementById('status').innerHTML = "";
 	$('#jira').css('visibility', 'hidden');
@@ -93,15 +102,17 @@ function pause() {
 //This function will submit the work log to Toggl
 function submitWork() {
 	event.preventDefault();
+	console.log(apiKey);
 	date = new Date;
 	isoDate = date.toISOString();
 	description = $('#description').val();
 	pid = $('#pid').val();
+	apiKeyString = apiKey + ":api_token"
 	$.ajax({
   		type: "POST",
   		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries",
   		beforeSend: function(xhr) {
-  			xhr.setRequestHeader("Authorization", "Basic " + btoa("8e3667b730cde20d46dc7effcede90e5:api_token"))
+  			xhr.setRequestHeader("Authorization", "Basic " + btoa(apiKeyString))
   		},
   		dataType: "json",
   		contentType: "application/json",
@@ -109,7 +120,7 @@ function submitWork() {
  		data: '{"time_entry":{"description":"' + description + '","duration":1500,"start":"' + isoDate + '","pid":' + pid + ',"created_with":"pomodoro"}}',
   		success: function() {
   			displayBreak();
-  		},
+  		}
 	});
 }
 
@@ -147,6 +158,21 @@ function loadFeed() {
 	});
 }
 
+function getProjects() {
+	$.ajax({
+		type: "GET",
+		dataType: "json",
+		contentType: "application/json",
+		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/workspaces/" + wid + "/projects",
+		beforeSend: function(xhr) {
+  			xhr.setRequestHeader("Authorization", "Basic " + btoa("8e3667b730cde20d46dc7effcede90e5:api_token"))
+  		},
+		success: function(projects) {
+			model.projects = projects;
+		}
+	})
+}
+
 $(document).ready(displayWorkTimer);
 
 
@@ -155,6 +181,11 @@ $(document).ready(displayWorkTimer);
 //    -H "Content-Type: application/json" \
 //    -H "Origin: localhost" \
 //     -X GET https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/projects/21218612
+
+// curl -v -u 8e3667b730cde20d46dc7effcede90e5:api_token \
+// 	-H "Content-Type: application/json" \
+// 	-H "Origin: localhost" \
+// 	-X GET https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/workspaces/1606184/projects
 
 // AJAX Requestion based on following curl request:
 //curl -v -u 1971800d4d82861d8f2c1651fea4d212:api_token \
@@ -181,5 +212,3 @@ $(document).ready(displayWorkTimer);
 //    -H "Origin: localhost" \
 //    -d '{"time_entry":{"description":"Logging time to ticket","duration":1500,"start":"2016-08-15T20:24:55+00:00","pid":21218612,"created_with":"pomodoro"}}' \
 //    -X POST https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries
-
-
