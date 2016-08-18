@@ -132,20 +132,24 @@ function submitWork() {
 	var isoDate = date.toISOString();
 	var description = $('#description').val();
 	var apiKeyString = window.localStorage.getItem("apiKey") + ":api_token"
-	$.ajax({
-  		type: "POST",
-  		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries",
-  		beforeSend: function(xhr) {
-  			xhr.setRequestHeader("Authorization", "Basic " + btoa(apiKeyString))
-  		},
-  		dataType: "json",
-  		contentType: "application/json",
- 		processData: false,
- 		data: '{"time_entry":{"description":"' + description + '","duration":1500,"start":"' + isoDate + '","pid":' + pid + ',"created_with":"pomodoro"}}',
-  		success: function() {
-  			displayBreak();
-  		}
-	});
+	if (pid === undefined) {
+		alert('Please select a project to complete the form');
+	} else {
+		$.ajax({
+	  		type: "POST",
+	  		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries",
+	  		beforeSend: function(xhr) {
+	  			xhr.setRequestHeader("Authorization", "Basic " + btoa(apiKeyString))
+	  		},
+	  		dataType: "json",
+	  		contentType: "application/json",
+	 		processData: false,
+	 		data: '{"time_entry":{"description":"' + description + '","duration":1500,"start":"' + isoDate + '","pid":' + pid + ',"created_with":"pomodoro"}}',
+	  		success: function() {
+	  			displayBreak();
+	  		}
+		});
+	}
 }
 
 //Sets up the interval and starts the break timer
