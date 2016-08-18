@@ -14,6 +14,7 @@ var countdownId = 0;
 var minutes;
 var seconds;
 var pid;
+var audio = new Audio('sound/dun_dun_1.mp3');
 
 //View
 
@@ -114,6 +115,7 @@ function countdownWork() {
 		document.getElementById('timer').innerHTML = pad(minutes) + ":" + pad(seconds);
 		document.getElementById('status').innerHTML = "Please log your work before proceeding.";
 		clearInterval(countdownId);
+		audio.play();
 		$('#jira').css('visibility', 'visible');
 		$('#jira').css('height', '300');
 	}
@@ -170,6 +172,7 @@ function countdownBreak() {
 		document.getElementById('timer').innerHTML = pad(minutes) + ":" + pad(seconds);
 		document.getElementById('status').innerHTML = "";
 		clearInterval(countdownId);
+		audio.play();
 		$('#start').off();
 		displayWorkTimer();
 		$('#reddit').css('visibility', 'hidden');
