@@ -13,8 +13,7 @@ var breakTime;
 var countdownId = 0;
 var minutes;
 var seconds;
-var wid;
-var apiKey;
+var pid;
 
 //View
 
@@ -27,10 +26,22 @@ function renderReddit() {
 	$('#reddit').html(redditLinks);
 }
 
+function checkLocalStorage() {
+	if (window.localStorage.getItem("apiKey") && window.localStorage.getItem("wid")) {
+		displayWorkTimer();
+		console.log(pid);
+	} else {
+		var apiKey = window.prompt("Please enter your Toggl API Key");
+		window.localStorage.setItem("apiKey", apiKey);
+		var wid = window.prompt("Please enter your Toggle Workspace ID");
+		window.localStorage.setItem("wid", wid);
+
+		displayWorkTimer();
+	}
+}
+
 //This function displays the work timer on the page and sets up the event listeners
 function displayWorkTimer() {
-	apiKey = window.prompt("Please enter your Toggl API Key");
-	wid = window.prompt("Please enter your Toggle Workspace ID");
 	workTime = 10;
 	minutes = Math.floor(workTime / 60);
 	seconds = workTime % 60;
@@ -39,10 +50,12 @@ function displayWorkTimer() {
 	$('#start').off();
 	$('#pause').off();
 	$('#jira').off();
+	$('#option').off();
 
 	$('#start').on('click', start);
 	$('#pause').on('click', pause);
 	$('#jira').on('submit', submitWork);
+	$('#selectProject').on('change', getPid);
 }
 
 //This function displays the break timer no the page and sets up event listeners. It also hides the JIRA form.
@@ -85,6 +98,19 @@ function countdownWork() {
 	} else {
 		minutes = 0;
 		seconds = 0;
+		var select = document.getElementById("selectProject");
+		var options = model.projects.map(function(d) {
+			return d.name;
+		});
+		var projectId = model.projects.map(function(p) {
+			return p.id;
+		})
+		for(var i = 0; i < options.length; i++) {
+		    var opt = options[i];
+		    var id = projectId[i];
+		    var el = $('#selectProject').append('<option value="' + id + '">' + opt +'</option>');
+		}
+
 		document.getElementById('timer').innerHTML = pad(minutes) + ":" + pad(seconds);
 		document.getElementById('status').innerHTML = "Please log your work before proceeding.";
 		clearInterval(countdownId);
@@ -102,12 +128,10 @@ function pause() {
 //This function will submit the work log to Toggl
 function submitWork() {
 	event.preventDefault();
-	console.log(apiKey);
 	date = new Date;
 	isoDate = date.toISOString();
 	description = $('#description').val();
-	pid = $('#pid').val();
-	apiKeyString = apiKey + ":api_token"
+	apiKeyString = window.localStorage.getItem("apiKey") + ":api_token"
 	$.ajax({
   		type: "POST",
   		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries",
@@ -163,7 +187,7 @@ function getProjects() {
 		type: "GET",
 		dataType: "json",
 		contentType: "application/json",
-		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/workspaces/" + wid + "/projects",
+		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/workspaces/" + window.localStorage.getItem("wid") + "/projects",
 		beforeSend: function(xhr) {
   			xhr.setRequestHeader("Authorization", "Basic " + btoa("8e3667b730cde20d46dc7effcede90e5:api_token"))
   		},
@@ -173,42 +197,9 @@ function getProjects() {
 	})
 }
 
-$(document).ready(displayWorkTimer);
+function getPid() {
+	pid = $(this).attr('value');
+	console.log(pid);
+}
 
-
-// Working API GET Request!:
-// curl -v -u 8e3667b730cde20d46dc7effcede90e5:api_token \
-//    -H "Content-Type: application/json" \
-//    -H "Origin: localhost" \
-//     -X GET https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/projects/21218612
-
-// curl -v -u 8e3667b730cde20d46dc7effcede90e5:api_token \
-// 	-H "Content-Type: application/json" \
-// 	-H "Origin: localhost" \
-// 	-X GET https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/workspaces/1606184/projects
-
-// AJAX Requestion based on following curl request:
-//curl -v -u 1971800d4d82861d8f2c1651fea4d212:api_token \
-//    -H "Content-Type: application/json" \
-//    -d '{"time_entry":{"description":"Meeting with possible clients","tags":["billed"],"duration":1200,"start":"2013-03-05T07:58:58.000Z","pid":123,"created_with":"curl"}}' \
-//    -X POST https://www.toggl.com/api/v8/time_entries
-
-
-//This request is returning a 403 error in the console.
-//$.ajax({
-//  type: "POST",
-//  dataType: "json",
-//  url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries",
-//  contentType: "application/json",
-//  username: "8e3667b730cde20d46dc7effcede90e5",
-//  password: "api_token",
-//  data: {"time_entry":{"description":"Logging time to ticket","duration":1500,"start":"2016-08-15T20:24:55+00:00","pid":21218612,"created_with":"pomodoro"}},
-//  success: function(response){console.log(response)},
-//});
-
-// This POST request works in curl
-//curl -v -u 8e3667b730cde20d46dc7effcede90e5:api_token \
-//    -H "Content-Type: application/json" \
-//    -H "Origin: localhost" \
-//    -d '{"time_entry":{"description":"Logging time to ticket","duration":1500,"start":"2016-08-15T20:24:55+00:00","pid":21218612,"created_with":"pomodoro"}}' \
-//    -X POST https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries
+$(document).ready(checkLocalStorage);
