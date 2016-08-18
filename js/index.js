@@ -128,10 +128,10 @@ function pause() {
 //This function will submit the work log to Toggl
 function submitWork() {
 	event.preventDefault();
-	date = new Date;
-	isoDate = date.toISOString();
-	description = $('#description').val();
-	apiKeyString = window.localStorage.getItem("apiKey") + ":api_token"
+	var date = new Date;
+	var isoDate = date.toISOString();
+	var description = $('#description').val();
+	var apiKeyString = window.localStorage.getItem("apiKey") + ":api_token"
 	$.ajax({
   		type: "POST",
   		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries",
@@ -183,13 +183,14 @@ function loadFeed() {
 }
 
 function getProjects() {
+	var apiKeyString = window.localStorage.getItem("apiKey") + ":api_token"
 	$.ajax({
 		type: "GET",
 		dataType: "json",
 		contentType: "application/json",
 		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/workspaces/" + window.localStorage.getItem("wid") + "/projects",
 		beforeSend: function(xhr) {
-  			xhr.setRequestHeader("Authorization", "Basic " + btoa("8e3667b730cde20d46dc7effcede90e5:api_token"))
+  			xhr.setRequestHeader("Authorization", "Basic " + btoa(apiKeyString))
   		},
 		success: function(projects) {
 			model.projects = projects;
