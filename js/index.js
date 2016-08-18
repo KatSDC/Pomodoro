@@ -43,11 +43,14 @@ function checkLocalStorage() {
 
 //This function displays the work timer on the page and sets up the event listeners
 function displayWorkTimer() {
-	workTime = 10;
+	workTime = 60;
 	minutes = Math.floor(workTime / 60);
 	seconds = workTime % 60;
 	getProjects();
 	document.getElementById('timer').innerHTML = pad(minutes) + ":" + pad(seconds);
+	$('#start').css('background-color', '#00cc21');
+    $('#pause').css('background-color', '#bdbdbf');
+
 	$('#start').off();
 	$('#pause').off();
 	$('#jira').off();
@@ -61,7 +64,7 @@ function displayWorkTimer() {
 
 //This function displays the break timer no the page and sets up event listeners. It also hides the JIRA form.
 function displayBreak() {
-	breakTime = 300;
+	breakTime = 60;
 	minutes = Math.floor(breakTime / 60);
 	seconds = breakTime % 60;
 	loadFeed();
@@ -69,6 +72,8 @@ function displayBreak() {
 	document.getElementById('status').innerHTML = "";
 	$('#jira').css('visibility', 'hidden');
 	$('#jira').css('height', '0');
+	$('#submit_work').css('background-color', '#bdbdbf');
+	$('#start').css('background-color', '#00cc21');
 	document.getElementById('start').disabled = false;
 
 	$('#start').off();
@@ -86,6 +91,8 @@ function pad(val) {
 function start() {
     countdownId = setInterval('countdownWork()', 1000);
     document.getElementById('start').disabled = true;
+    $('#start').css('background-color', '#bdbdbf');
+    $('#pause').css('background-color', '#00cc21');
 }
 
 //This function is responsible for the logic behind what shows while the timer is running or stopped
@@ -118,6 +125,8 @@ function countdownWork() {
 		audio.play();
 		$('#jira').css('visibility', 'visible');
 		$('#jira').css('height', '300');
+		$('#submit_work').css('background-color', '#00cc21');
+		$('#pause').css('background-color', '#bdbdbf');
 	}
 }
 
@@ -125,6 +134,8 @@ function countdownWork() {
 function pause() {
 	clearInterval(countdownId);
 	document.getElementById('start').disabled = false;
+	$('#start').css('background-color', '#00cc21');
+	$('#pause').css('background-color', '#bdbdbf');
 }
 
 //This function will submit the work log to Toggl
@@ -157,6 +168,8 @@ function submitWork() {
 //Sets up the interval and starts the break timer
 function startBreak() {
 	countdownId = setInterval("countdownBreak()", 1000);
+	$('#pause').css('background-color', '#00cc21');
+	$('#start').css('background-color', '#bdbdbf');
 }
 
 //Responsible for actually running the time down and what shows on the page while running or stopped

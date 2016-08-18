@@ -1,18 +1,22 @@
 body {
   text-align: center;
+  background-color: #f9faff;
 }
 
 h1 {
   text-align: center;
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
+  letter-spacing: .1em;
   font-size: 5.5em;
   font-weight: 900;
+  color: #3a3e3b;
 }
 
 h3 {
   font-family: 'Open Sans', sans-serif;
   font-size: 1.5em;
   font-weight: 700;
+  color: #3a3e3b;
 }
 
 form {
@@ -28,7 +32,7 @@ form div + div {
 input, textarea {
   font-family: 'Open Sans', sans-serif;
     font-size: 1em;
-    color: #9e9d9c;
+    color: #3a3e3b;
     width: 500px;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -46,18 +50,27 @@ textarea {
   display: inline-block;
   font-family: 'Open Sans', sans-serif;
   font-size: 3.5em;
+  color: #0d0106;
 }
 
 .timer-btn {
-  background-color: #ccc;
+  background-color: #bdbdbf;
   border: none;
   border-radius: 4px;
-  color: #fff;
+  color: #f9faff;
   font-family: 'Open Sans', sans-serif;
   font-size: 1.5em;
   text-decoration: none;
   padding: 0 10px;
   margin: 0 10px;
+}
+
+#start {
+  background-color: #00cc21;
+}
+
+#pause {
+
 }
 
 #jira {
@@ -66,10 +79,10 @@ textarea {
 }
 
 #submit_work {
-  background-color: #ccc;
+  background-color: #00cc21;
   border: none;
   border-radius: 4px;
-  color: #fff;
+  color: #f9faff;
   font-family: 'Open Sans', sans-serif;
   font-size: 1em;
   text-decoration: none;
@@ -89,6 +102,7 @@ textarea {
 span {
   margin-right: 10px;
   padding: 0 10px;
+  color: #3a3e3b;
 }
 
 a {
