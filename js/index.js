@@ -199,7 +199,7 @@ function getProjects() {
 }
 
 function getPid() {
-	pid = $(this).attr('value');
+	pid = $('#selectProject').val();
 	console.log(pid);
 }
 
