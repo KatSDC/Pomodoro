@@ -43,7 +43,7 @@ function checkLocalStorage() {
 
 //This function displays the work timer on the page and sets up the event listeners
 function displayWorkTimer() {
-	workTime = 10;
+	workTime = 1500;
 	minutes = Math.floor(workTime / 60);
 	seconds = workTime % 60;
 	getProjects();
@@ -64,7 +64,7 @@ function displayWorkTimer() {
 
 //This function displays the break timer no the page and sets up event listeners. It also hides the JIRA form.
 function displayBreak() {
-	breakTime = 10;
+	breakTime = 300;
 	minutes = Math.floor(breakTime / 60);
 	seconds = breakTime % 60;
 	loadFeed();
