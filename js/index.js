@@ -32,9 +32,9 @@ function checkLocalStorage() {
 		displayWorkTimer();
 		console.log(pid);
 	} else {
-		var apiKey = window.prompt("Please enter your Toggl API Key");
+		var apiKey = window.prompt("Please enter your Toggl API Key. If you do not have a Toggl account, just select the 'Ok' button.");
 		window.localStorage.setItem("apiKey", apiKey);
-		var wid = window.prompt("Please enter your Toggle Workspace ID");
+		var wid = window.prompt("Please enter your Toggle Workspace ID. If you do not have a Toggl account, just select the 'Ok' button.");
 		window.localStorage.setItem("wid", wid);
 
 		displayWorkTimer();
@@ -43,7 +43,7 @@ function checkLocalStorage() {
 
 //This function displays the work timer on the page and sets up the event listeners
 function displayWorkTimer() {
-	workTime = 1500;
+	workTime = 10;
 	minutes = Math.floor(workTime / 60);
 	seconds = workTime % 60;
 	getProjects();
@@ -64,7 +64,7 @@ function displayWorkTimer() {
 
 //This function displays the break timer no the page and sets up event listeners. It also hides the JIRA form.
 function displayBreak() {
-	breakTime = 300;
+	breakTime = 10;
 	minutes = Math.floor(breakTime / 60);
 	seconds = breakTime % 60;
 	loadFeed();
@@ -106,27 +106,32 @@ function countdownWork() {
 	} else {
 		minutes = 0;
 		seconds = 0;
-		var select = document.getElementById("selectProject");
-		var options = model.projects.map(function(d) {
-			return d.name;
-		});
-		var projectId = model.projects.map(function(p) {
-			return p.id;
-		})
-		for(var i = 0; i < options.length; i++) {
-		    var opt = options[i];
-		    var id = projectId[i];
-		    var el = $('#selectProject').append('<option value="' + id + '">' + opt +'</option>');
-		}
-
 		document.getElementById('timer').innerHTML = pad(minutes) + ":" + pad(seconds);
-		document.getElementById('status').innerHTML = "Please log your work before proceeding.";
-		clearInterval(countdownId);
 		audio.play();
-		$('#jira').css('visibility', 'visible');
-		$('#jira').css('height', '300');
-		$('#submit_work').css('background-color', '#00cc21');
+		clearInterval(countdownId);
 		$('#pause').css('background-color', '#bdbdbf');
+		if (window.localStorage.getItem("apiKey")) {
+			//Dynamically load dropdown with Projects through the API
+			var select = document.getElementById("selectProject");
+			var options = model.projects.map(function(d) {
+				return d.name;
+			});
+			var projectId = model.projects.map(function(p) {
+				return p.id;
+			})
+			for(var i = 0; i < options.length; i++) {
+			    var opt = options[i];
+			    var id = projectId[i];
+			    var el = $('#selectProject').append('<option value="' + id + '">' + opt +'</option>');
+			}
+			
+			document.getElementById('status').innerHTML = "Please log your work before proceeding.";
+			$('#jira').css('visibility', 'visible');
+			$('#jira').css('height', '300');
+			$('#submit_work').css('background-color', '#00cc21');
+		} else {
+			displayBreak();
+		}
 	}
 }
 
@@ -144,7 +149,6 @@ function submitWork() {
 	var date = new Date;
 	var isoDate = date.toISOString();
 	var description = $('#description').val();
-	var apiKeyString = window.localStorage.getItem("apiKey") + ":api_token"
 	if (pid === undefined) {
 		alert('Please select a project to complete the form');
 	} else {
@@ -152,7 +156,7 @@ function submitWork() {
 	  		type: "POST",
 	  		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/time_entries",
 	  		beforeSend: function(xhr) {
-	  			xhr.setRequestHeader("Authorization", "Basic " + btoa(apiKeyString))
+	  			xhr.setRequestHeader("Authorization", "Basic " + btoa(window.localStorage.getItem("apiKey") + ":api_token"))
 	  		},
 	  		dataType: "json",
 	  		contentType: "application/json",
@@ -172,7 +176,7 @@ function startBreak() {
 	$('#start').css('background-color', '#bdbdbf');
 }
 
-//Responsible for actually running the time down and what shows on the page while running or stopped
+//Responsible for counting down the break timer and making the Reddit content visible
 function countdownBreak() {
 	minutes = Math.floor(breakTime / 60);
 	seconds = breakTime % 60;
@@ -192,6 +196,7 @@ function countdownBreak() {
 	}
 }
 
+//Loads top 25 links from Reddit
 function loadFeed() {
 	$.get('https://www.reddit.com/.json?over_18=false', function(data) {
 		data.data.children.map(function(d) {
@@ -202,15 +207,15 @@ function loadFeed() {
 	});
 }
 
+//Pulls all projects from the Toggl API and stores them in the model
 function getProjects() {
-	var apiKeyString = window.localStorage.getItem("apiKey") + ":api_token"
 	$.ajax({
 		type: "GET",
 		dataType: "json",
 		contentType: "application/json",
 		url: "https://cors-anywhere.herokuapp.com/https://www.toggl.com/api/v8/workspaces/" + window.localStorage.getItem("wid") + "/projects",
 		beforeSend: function(xhr) {
-  			xhr.setRequestHeader("Authorization", "Basic " + btoa(apiKeyString))
+  			xhr.setRequestHeader("Authorization", "Basic " + btoa(window.localStorage.getItem("apiKey") + ":api_token"))
   		},
 		success: function(projects) {
 			model.projects = projects;
@@ -218,6 +223,7 @@ function getProjects() {
 	})
 }
 
+//Grabs the project ID from the dynamically loaded dropdown menu
 function getPid() {
 	pid = $('#selectProject').val();
 	console.log(pid);
